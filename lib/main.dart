@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import 'unlock.dart';
+import 'loading.dart';
 
 void main() => runApp(new MyApp());
 
@@ -9,8 +10,8 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Shimmer',
       routes: {
-        'loading': (_) => LoadingListPage(),
-        'slide': (_) => SlideToUnlockPage(),
+        'loading': (_) => Loading(),
+        'slide': (_) => Unlock(),
       },
       theme: new ThemeData(
         primarySwatch: Colors.blue,
@@ -26,234 +27,68 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final TextStyle textStyle =
+      TextStyle(fontSize: 20, fontFamily: "Cursive", color: Colors.red);
   @override
   Widget build(BuildContext context) {
+    final loading = Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(30),
+      color: Colors.blue,
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+        onPressed: () {
+          Navigator.of(context).pushNamed('loading');
+        },
+        child: Text(
+          "Loading Page",
+          textAlign: TextAlign.center,
+          style: textStyle.copyWith(
+              color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+
+    final unlock = Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(30),
+      color: Colors.blue,
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+        onPressed: () {
+          Navigator.of(context).pushNamed('slide');
+        },
+        child: Text(
+          "Slide To Unlock",
+          textAlign: TextAlign.center,
+          style: textStyle.copyWith(
+              color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Shimmer'),
       ),
-      body: Column(
-        children: [
-          ListTile(
-            title: Text('Loading List'),
-            onTap: () => Navigator.of(context).pushNamed('loading'),
-          ),
-          ListTile(
-            title: Text('Slide To Unlock'),
-            onTap: () => Navigator.of(context).pushNamed('slide'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class LoadingListPage extends StatefulWidget {
-  @override
-  _LoadingListPageState createState() => _LoadingListPageState();
-}
-
-class _LoadingListPageState extends State<LoadingListPage> {
-  bool _enabled = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Loading List'),
-      ),
       body: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        margin: EdgeInsets.all(30),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Shimmer.fromColors(
-              baseColor: Colors.grey[300],
-              highlightColor: Colors.grey[100],
-              enabled: _enabled,
-              child: Column(
-                children: [0, 1, 2, 3, 4, 5, 6]
-                    .map((_) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 48.0,
-                                height: 48.0,
-                                color: Colors.white,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: double.infinity,
-                                      height: 8.0,
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 2.0),
-                                    ),
-                                    Container(
-                                      width: double.infinity,
-                                      height: 8.0,
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 2.0),
-                                    ),
-                                    Container(
-                                      width: 40.0,
-                                      height: 8.0,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ))
-                    .toList(),
-              ),
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: FlatButton(
-                  onPressed: () {
-                    setState(() {
-                      _enabled = !_enabled;
-                    });
-                  },
-                  child: Text(
-                    _enabled ? 'Stop' : 'Play',
-                    style: Theme.of(context).textTheme.button.copyWith(
-                        fontSize: 18.0,
-                        color: _enabled ? Colors.redAccent : Colors.green),
-                  )),
-            )
-          ],
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[loading, SizedBox(height: 30), unlock],
         ),
       ),
-    );
-  }
-}
-
-class SlideToUnlockPage extends StatelessWidget {
-  final days = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
-  final months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final time = DateTime.now();
-    final hour = time.hour;
-    final minute = time.minute;
-    final day = time.weekday;
-    final month = time.month;
-    final dayInMonth = time.day;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Slide To Unlock'),
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Image.asset(
-          //   'assets/images/background.jpg',
-          //   fit: BoxFit.cover,
-          // ),
-          Image.network(
-            "https://firebasestorage.googleapis.com/v0/b/kingpes-download.appspot.com/o/bg%2Fbg_0011_Layer%201.jpg?alt=media&token=03435056-fe1f-4165-b4fb-fa5e69d07369",
-            fit: BoxFit.cover,
-          ),
-          Positioned(
-            top: 48.0,
-            right: 0.0,
-            left: 0.0,
-            child: Center(
-              child: Column(
-                children: [
-                  Text(
-                    '${hour < 10 ? '0$hour' : '$hour'}:${minute < 10 ? '0$minute' : '$minute'}',
-                    style: TextStyle(
-                      fontSize: 60.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  ),
-                  Text(
-                    '${days[day - 1]}, ${months[month - 1]} $dayInMonth',
-                    style: TextStyle(fontSize: 24.0, color: Colors.white),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-              bottom: 24.0,
-              left: 0.0,
-              right: 0.0,
-              child: Center(
-                child: Opacity(
-                  opacity: 0.8,
-                  child: Shimmer.fromColors(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          'assets/images/chevron_right.png',
-                          height: 20.0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        ),
-                        Text(
-                          'Slide to unlock',
-                          style: TextStyle(
-                            fontSize: 28.0,
-                          ),
-                        )
-                      ],
-                    ),
-                    baseColor: Colors.black12,
-                    highlightColor: Colors.white,
-                    loop: 3,
-                  ),
-                ),
-              ))
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.blue,
+        currentIndex: 0,
+        type: BottomNavigationBarType.fixed,
+        fixedColor: Colors.black54,
+        items: [
+          BottomNavigationBarItem(title: Text("Home"), icon: Icon(Icons.home)),
+          BottomNavigationBarItem(title: Text("Post"), icon: Icon(Icons.cloud_upload)),
+          BottomNavigationBarItem(title: Text("Page"), icon: Icon(Icons.pages))
         ],
       ),
     );
